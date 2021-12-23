@@ -1,7 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const methodOverride = require('method-override')
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser') ;
+const nodemailer = require('nodemailer');
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -22,6 +23,7 @@ const Menu = mongoose.model("menu")
 
 app.use(methodOverride('_method'))
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json());
 
 app.use(cors());
 
@@ -36,9 +38,22 @@ mongoose.connect("mongodb+srv://ulrich:chqIGYjaPKNeSXta@cluster0.3egif.mongodb.n
 app.set('view engine', 'ejs');
 app.use(express.static("public"));
 
-app.get('/', (req, res) => {
-   res.render('index')
-  });
+
+app.get('/',(req,res)=>{
+  res.render('seccure')
+})
+
+app.post('/admin',(req,res)=>{
+  let password = req.body.password
+  let username = req.body.username
+  if(password === '7415369' && username === 'ulrich2021'){
+    res.render('index')
+  }else{
+    res.json({
+      acces: 'refusé'
+    })
+  }
+})
 
 app.get('/getRestaurant',(req,res)=>{
     Restaurant.find({}).then(data=>{
@@ -70,7 +85,6 @@ app.post('/addRestaurant', (req, res) => {
   })
   restaurant.save()
       .then(data => {
-          console.log(data)
           res.send(data)
       }).catch(err => {
           console.log(err)
@@ -90,13 +104,60 @@ app.post('/addMenu', (req, res) => {
   })
   menu.save()
       .then(data => {
-          console.log(data)
-          res.redirect('/')
+        res.send(data)
       }).catch(err => {
           console.log(err)
       })
 })
+
+// NODEMAILER FOR POST COMMANDE // 
+
+var transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com", 
+      port: 587,
+      secure: false,
+    auth: {
+      user: "kleimy2021@gmail.com",
+      pass: "KLeiMY2@2I" 
+    }
+  });
+
  
+  // verifying the connection configuration
+    transporter.verify(function(error, success) {
+        if (error) {
+        console.log(error);
+        } else {
+        console.log("Server is ready to take our messages!");
+        }
+    });
+ 
+    app.post('/access', (req, res, next) => {
+        var email = 'kleimy2021@gmail.com'
+        var message = req.body.message
+        console.log(message)
+        var content = `email: ${email} \n message: ${message} `
+      
+        var mail = {
+          from: 'kleimy2021@gmail.com', 
+          to: 'leresponsable3@gmail.com', 
+          message: 'text d envoi',
+          text: content
+        }
+      
+        transporter.sendMail(mail, (err, data) => {
+          if (err) {
+            res.json({
+              status: 'fail'
+            })
+          } else {
+            res.json({
+             status: 'success'
+            })
+          }
+        })
+      })
+      
 
   
 app.listen(port);
