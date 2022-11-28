@@ -63,6 +63,42 @@ app.get('/getRestaurant',(req,res)=>{
     })    
 }) 
 
+/// GET FONCTION FOR SOCODD ///
+
+app.get('/magasin', (req,res)=>{
+    Magasin.find({}).then(data => {
+      res.send(data)
+    }).catch(err => {
+      console.log(err)
+    })
+})
+
+
+
+app.get('/financement', (req, res) =>{
+  Financement.find({}).then(data =>{
+    res.send(data)
+  }).catch(err =>{
+    console.log(err)
+  })
+})
+
+app.get('/delegue', (req,res) => {
+  Delegue.find({}).then( data => {
+    res.send(data)
+  }).catch(err => {
+    console.log(err)
+  })
+})
+
+app.get('/vente', (req,res) => {
+  Vente.find({}).then(data =>{
+    res.send(data)
+  }).catch(err => {
+    console.log(err)
+  })
+})
+
 
 // GET MENU 
 app.get('/getMenu',(req,res)=>{
