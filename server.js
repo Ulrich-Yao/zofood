@@ -13,11 +13,21 @@ require('./Employee')
 require('./User')
 require('./Restaurant')
 require('./Menu')
+require('./Magasin')
+require('./Financement')
+require('./Delegue')
+require('./Vente')
 
 const Employee = mongoose.model("employee")
 const User = mongoose.model("user")
 const Restaurant = mongoose.model("restaurant")
 const Menu = mongoose.model("menu")
+
+const Magasin = mongoose.model("magasin")
+const Financement = mongoose.model("financement")
+const Delegue = mongoose.model("delegue")
+const Vente = mongoose.model("vente")
+
 
 
 
